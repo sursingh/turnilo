@@ -37,7 +37,7 @@ export interface BubbleMenuProps {
   direction: Direction;
   stage: Stage;
   fixedSize?: boolean;
-  containerStage?: Stage;
+  containerStage: Stage;
   openOn: Element;
   alignOn?: Element;
   onClose: Fn;
@@ -66,15 +66,6 @@ interface PositionCSSProperties {
   width?: number;
   maxWidth?: number;
   maxHeight?: number;
-}
-
-function defaultStage(): Stage {
-  return new Stage({
-    x: SCREEN_OFFSET,
-    y: SCREEN_OFFSET,
-    width: window.innerWidth - SCREEN_OFFSET * 2,
-    height: window.innerHeight - SCREEN_OFFSET * 2
-  });
 }
 
 function alignHorizontalInside(align: Align, { left, width }: ClientRect): number {
@@ -177,7 +168,7 @@ export class BubbleMenu extends React.Component<BubbleMenuProps, BubbleMenuState
     const { x: menuX, y: menuY } = this.state;
     const { height: menuHeight, width: menuWidth } = stage;
 
-    const container = containerStage || defaultStage();
+    const container = containerStage;
     const containerVerticalExtent = container.y + container.height - menuHeight;
     const containerHorizontalExtent = container.x + container.width - menuWidth;
 

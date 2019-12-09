@@ -57,7 +57,7 @@ export class SeriesTilesRow extends React.Component<SeriesTilesRowProps, SeriesT
 
   private maxItems(): number {
     const { menuStage, essence: { series } } = this.props;
-    return menuStage && getMaxItems(menuStage.width, series.count());
+    return getMaxItems(menuStage.width, series.count());
   }
 
   // This will be called externally

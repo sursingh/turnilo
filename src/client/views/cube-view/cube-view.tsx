@@ -41,6 +41,7 @@ import { ViewSupervisor } from "../../../common/models/view-supervisor/view-supe
 import { VisualizationProps } from "../../../common/models/visualization-props/visualization-props";
 import { Fn } from "../../../common/utils/general/general";
 import { datesEqual } from "../../../common/utils/time/time";
+import { SCREEN_OFFSET } from "../../components/bubble-menu/bubble-menu";
 import { DimensionMeasurePanel } from "../../components/dimension-measure-panel/dimension-measure-panel";
 import { DropIndicator } from "../../components/drop-indicator/drop-indicator";
 import { FilterTile } from "../../components/filter-tile/filter-tile";
@@ -103,7 +104,7 @@ export interface CubeViewState {
   essence?: Essence;
   timekeeper?: Timekeeper;
   visualizationStage?: Stage;
-  menuStage?: Stage;
+  menuStage: Stage;
   dragOver?: boolean;
   showRawDataModal?: boolean;
   showViewDefinitionModal?: boolean;
@@ -121,6 +122,15 @@ const MAX_PANEL_WIDTH = 400;
 export interface DataSetWithTabOptions {
   dataset: Dataset;
   options?: TabulatorOptions;
+}
+
+function defaultStage(): Stage {
+  return new Stage({
+    x: SCREEN_OFFSET,
+    y: SCREEN_OFFSET,
+    width: window.innerWidth - SCREEN_OFFSET * 2,
+    height: window.innerHeight - SCREEN_OFFSET * 2
+  });
 }
 
 export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
@@ -144,6 +154,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
 
     this.state = {
       essence: null,
+      menuStage: defaultStage(),
       dragOver: false,
       layout: this.getStoredLayout(),
       lastRefreshRequestTimestamp: 0,
