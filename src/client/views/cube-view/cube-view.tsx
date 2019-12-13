@@ -40,6 +40,7 @@ import { TimeShift } from "../../../common/models/time-shift/time-shift";
 import { Timekeeper } from "../../../common/models/timekeeper/timekeeper";
 import { ViewSupervisor } from "../../../common/models/view-supervisor/view-supervisor";
 import { VisualizationProps } from "../../../common/models/visualization-props/visualization-props";
+import { Nullary } from "../../../common/utils/functional/functional";
 import { Fn } from "../../../common/utils/general/general";
 import { datesEqual } from "../../../common/utils/time/time";
 import { DimensionMeasurePanel } from "../../components/dimension-measure-panel/dimension-measure-panel";
@@ -134,7 +135,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
 
   public mounted: boolean;
   private readonly clicker: Clicker;
-  private downloadableDataset: DataSetWithTabOptions;
+  private getDownloadableDataset: Nullary<DataSetWithTabOptions>;
   private visualization = React.createRef<HTMLDivElement>();
   private container = React.createRef<HTMLDivElement>();
   private filterTile = React.createRef<FilterTile>();
@@ -573,7 +574,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
       openUrlShortenerModal={this.openUrlShortenerModal}
       openDruidQueryModal={this.openDruidQueryModal}
       customization={customization}
-      getDownloadableDataset={() => this.downloadableDataset}
+      getDownloadableDataset={this.getDownloadableDataset}
       changeTimezone={this.changeTimezone}
       updatingMaxTime={updatingMaxTime}
     />;
@@ -723,7 +724,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
       timekeeper: this.state.timekeeper,
       stage,
       registerDownloadableDataset: (dataset: Dataset) => {
-        this.downloadableDataset = { dataset, options: tabularOptions(essence) };
+        this.getDownloadableDataset = () => ({ dataset, options: tabularOptions(essence) });
       }
     };
 
