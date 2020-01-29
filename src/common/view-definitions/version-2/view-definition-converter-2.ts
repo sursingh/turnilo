@@ -52,12 +52,12 @@ import {
 } from "../../models/filter-clause/filter-clause";
 import { Filter } from "../../models/filter/filter";
 import { Highlight } from "../../models/highlight/highlight";
-import { Manifest } from "../../models/manifest/manifest";
 import { SeriesList } from "../../models/series-list/series-list";
 import { DimensionSort, SeriesSort, Sort } from "../../models/sort/sort";
 import { kindToType, Split } from "../../models/split/split";
 import { Splits } from "../../models/splits/splits";
 import { TimeShift } from "../../models/time-shift/time-shift";
+import { VisualizationManifest } from "../../models/visualization-manifest/visualization-manifest";
 import { ViewDefinitionConverter } from "../view-definition-converter";
 import { ViewDefinition2 } from "./view-definition-2";
 
@@ -66,7 +66,7 @@ export type FilterSelection = Expression | string;
 export class ViewDefinitionConverter2 implements ViewDefinitionConverter<ViewDefinition2, Essence> {
   version = 2;
 
-  fromViewDefinition(definition: ViewDefinition2, dataCube: DataCube, visualizations: Manifest[]): Essence {
+  fromViewDefinition(definition: ViewDefinition2, dataCube: DataCube, visualizations: VisualizationManifest[]): Essence {
     const visualization = NamedArray.findByName(visualizations, definition.visualization);
 
     const measureNames = definition.multiMeasureMode ? definition.selectedMeasures : [definition.singleMeasure];

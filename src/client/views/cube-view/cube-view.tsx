@@ -19,7 +19,7 @@ import { Timezone } from "chronoshift";
 import { Dataset, TabulatorOptions } from "plywood";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { MANIFESTS } from "../../../common/manifests";
+import { MANIFESTS } from "../../../common/visualization-manifests";
 import { Clicker } from "../../../common/models/clicker/clicker";
 import { Colors } from "../../../common/models/colors/colors";
 import { Customization } from "../../../common/models/customization/customization";
@@ -29,7 +29,6 @@ import { Dimension } from "../../../common/models/dimension/dimension";
 import { Essence, VisStrategy } from "../../../common/models/essence/essence";
 import { Filter } from "../../../common/models/filter/filter";
 import { Highlight } from "../../../common/models/highlight/highlight";
-import { Manifest } from "../../../common/models/manifest/manifest";
 import { Measure } from "../../../common/models/measure/measure";
 import { SeriesList } from "../../../common/models/series-list/series-list";
 import { Series } from "../../../common/models/series/series";
@@ -39,6 +38,7 @@ import { Stage } from "../../../common/models/stage/stage";
 import { TimeShift } from "../../../common/models/time-shift/time-shift";
 import { Timekeeper } from "../../../common/models/timekeeper/timekeeper";
 import { ViewSupervisor } from "../../../common/models/view-supervisor/view-supervisor";
+import { VisualizationManifest } from "../../../common/models/visualization-manifest/visualization-manifest";
 import { VisualizationProps } from "../../../common/models/visualization-props/visualization-props";
 import { Fn } from "../../../common/utils/general/general";
 import { datesEqual } from "../../../common/utils/time/time";
@@ -49,7 +49,6 @@ import { GlobalEventListener } from "../../components/global-event-listener/glob
 import { ManualFallback } from "../../components/manual-fallback/manual-fallback";
 import { PinboardPanel } from "../../components/pinboard-panel/pinboard-panel";
 import { Direction, DragHandle, ResizeHandle } from "../../components/resize-handle/resize-handle";
-import { SeriesTile } from "../../components/series-tile/series-tile";
 import { SeriesTilesRow } from "../../components/series-tile/series-tiles-row";
 import { SplitTile } from "../../components/split-tile/split-tile";
 import { SvgIcon } from "../../components/svg-icon/svg-icon";
@@ -93,7 +92,7 @@ export interface CubeViewProps {
   hash: string;
   updateViewHash: (newHash: string, force?: boolean) => void;
   getCubeViewHash?: (essence: Essence, withPrefix?: boolean) => string;
-  getEssenceFromHash: (hash: string, dateCube: DataCube, visualizations: Manifest[]) => Essence;
+  getEssenceFromHash: (hash: string, dateCube: DataCube, visualizations: VisualizationManifest[]) => Essence;
   dataCube: DataCube;
   onNavClick?: Fn;
   customization?: Customization;
@@ -198,7 +197,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
         const { essence } = this.state;
         this.setState({ essence: essence.changeColors(colors) });
       },
-      changeVisualization: (visualization: Manifest) => {
+      changeVisualization: (visualization: VisualizationManifest) => {
         const { essence } = this.state;
         this.setState({ essence: essence.changeVisualization(visualization) });
       },

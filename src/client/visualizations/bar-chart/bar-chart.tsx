@@ -20,7 +20,7 @@ import { List, Set } from "immutable";
 import { Dataset, Datum, NumberRange, PlywoodRange, PseudoDatum, Range } from "plywood";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { BAR_CHART_MANIFEST } from "../../../common/manifests/bar-chart/bar-chart";
+import { BAR_CHART_MANIFEST } from "../../../common/visualization-manifests/bar-chart/bar-chart";
 import { DateRange } from "../../../common/models/date-range/date-range";
 import { Dimension } from "../../../common/models/dimension/dimension";
 import { FixedTimeFilterClause, NumberFilterClause, StringFilterAction, StringFilterClause } from "../../../common/models/filter-clause/filter-clause";

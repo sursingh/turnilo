@@ -23,10 +23,9 @@ import { Colors } from "../colors/colors";
 import { DataCube } from "../data-cube/data-cube";
 import { DateRange } from "../date-range/date-range";
 import { Dimension } from "../dimension/dimension";
-import { FilterClause, FixedTimeFilterClause, isTimeFilter, NumberFilterClause, RelativeTimeFilterClause, TimeFilterClause, toExpression } from "../filter-clause/filter-clause";
+import { FilterClause, FixedTimeFilterClause, isTimeFilter, NumberFilterClause, TimeFilterClause, toExpression } from "../filter-clause/filter-clause";
 import { Filter } from "../filter/filter";
 import { Highlight } from "../highlight/highlight";
-import { Manifest, Resolve } from "../manifest/manifest";
 import { Measure } from "../measure/measure";
 import { SeriesList } from "../series-list/series-list";
 import { ConcreteSeries, SeriesDerivation } from "../series/concrete-series";
@@ -39,13 +38,14 @@ import { Splits } from "../splits/splits";
 import { TimeShift } from "../time-shift/time-shift";
 import { TimeShiftEnv, TimeShiftEnvType } from "../time-shift/time-shift-env";
 import { Timekeeper } from "../timekeeper/timekeeper";
+import { Resolve, VisualizationManifest } from "../visualization-manifest/visualization-manifest";
 
 function constrainDimensions(dimensions: OrderedSet<string>, dataCube: DataCube): OrderedSet<string> {
   return <OrderedSet<string>> dimensions.filter(dimensionName => Boolean(dataCube.getDimension(dimensionName)));
 }
 
 export interface VisualizationAndResolve {
-  visualization: Manifest;
+  visualization: VisualizationManifest;
   resolve: Resolve;
 }
 
@@ -63,9 +63,9 @@ export enum VisStrategy {
 type DimensionId = string;
 
 export interface EssenceValue {
-  visualizations: Manifest[];
+  visualizations: VisualizationManifest[];
   dataCube: DataCube;
-  visualization: Manifest;
+  visualization: VisualizationManifest;
   timezone: Timezone;
   filter: Filter;
   timeShift: TimeShift;
@@ -135,12 +135,12 @@ function resolveVisualization({ visualization, visualizations, dataCube, splits,
 export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
 
   static getBestVisualization(
-    visualizations: Manifest[],
+    visualizations: VisualizationManifest[],
     dataCube: DataCube,
     splits: Splits,
     series: SeriesList,
     colors: Colors,
-    currentVisualization: Manifest
+    currentVisualization: VisualizationManifest
   ): VisualizationAndResolve {
     const visAndResolves = visualizations.map(visualization => {
       const isSelectedVisualization = visualization === currentVisualization;
@@ -154,7 +154,7 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
     return visAndResolves.sort((vr1, vr2) => Resolve.compare(vr1.resolve, vr2.resolve))[0];
   }
 
-  static fromDataCube(dataCube: DataCube, visualizations: Manifest[]): Essence {
+  static fromDataCube(dataCube: DataCube, visualizations: VisualizationManifest[]): Essence {
     const essence = new Essence({
       dataCube,
       visualizations,
@@ -537,7 +537,7 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
       strategy = VisStrategy.UnfairGame;
     }
 
-    let newVisualization: Manifest = visualization;
+    let newVisualization: VisualizationManifest = visualization;
     if (strategy !== VisStrategy.KeepAlways && strategy !== VisStrategy.UnfairGame) {
       const currentVisualization = (strategy === VisStrategy.FairGame ? null : visualization);
       const visAndResolve = Essence.getBestVisualization(visualizations, dataCube, splitsWithFilters, series, colors, currentVisualization);
@@ -636,7 +636,7 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
     return this.set("colors", colors).resolveVisualizationAndUpdate();
   }
 
-  public changeVisualization(visualization: Manifest): Essence {
+  public changeVisualization(visualization: VisualizationManifest): Essence {
     return this.set("visualization", visualization).resolveVisualizationAndUpdate();
   }
 
