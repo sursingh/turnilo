@@ -199,7 +199,7 @@ describe("EssenceProps", () => {
 
       it("defaults to table with non continuous dimension", () => {
         const essence = EssenceFixtures.twitterNoVisualisation()
-          .changeVisualization(TOTALS_MANIFEST)
+          .changeVisualization(TOTALS_MANIFEST, {})
           .addSplit(twitterHandleSplit, VisStrategy.FairGame);
         expect(essence.visualization).to.deep.equal(TABLE_MANIFEST);
         expect(essence.visResolve.isReady()).to.be.true;
@@ -207,7 +207,7 @@ describe("EssenceProps", () => {
 
       it("defaults to line chart with a continuous dimension", () => {
         const essence = EssenceFixtures.twitterNoVisualisation()
-          .changeVisualization(TOTALS_MANIFEST)
+          .changeVisualization(TOTALS_MANIFEST, {})
           .addSplit(timeSplit, VisStrategy.FairGame);
         expect(essence.visualization).to.deep.equal(LINE_CHART_MANIFEST);
         expect(essence.visResolve.isReady()).to.be.true;
@@ -224,7 +224,7 @@ describe("EssenceProps", () => {
       it("in unfair game, gives existing vis a bonus", () => {
         const essence = EssenceFixtures.twitterNoVisualisation()
           .addSplit(timeSplit, VisStrategy.FairGame)
-          .changeVisualization(BAR_CHART_MANIFEST);
+          .changeVisualization(BAR_CHART_MANIFEST, {});
         expect(essence.visualization).to.deep.equal(BAR_CHART_MANIFEST);
         expect(essence.visResolve.isReady()).to.be.true;
         const newSplit = essence.addSplit(twitterHandleSplit, VisStrategy.UnfairGame);
@@ -234,7 +234,7 @@ describe("EssenceProps", () => {
 
       it("defaults back to totals with no split", () => {
         const essence = EssenceFixtures.twitterNoVisualisation()
-          .changeVisualization(TOTALS_MANIFEST)
+          .changeVisualization(TOTALS_MANIFEST, {})
           .addSplit(timeSplit, VisStrategy.FairGame);
         expect(essence.visualization).to.deep.equal(LINE_CHART_MANIFEST);
         expect(essence.visResolve.isReady()).to.be.true;
@@ -253,7 +253,7 @@ describe("EssenceProps", () => {
       noMeasuresTests.forEach(({ splits, visualization }) => {
         it(`does not change ${visualization.title} visualization when in manual resolve`, () => {
           const essence = EssenceFixtures.twitterNoVisualisation()
-            .changeVisualization(TOTALS_MANIFEST)
+            .changeVisualization(TOTALS_MANIFEST, {})
             .addSplit(splits[0], VisStrategy.FairGame);
           expect(essence.visualization).to.deep.equal(visualization);
           expect(essence.visResolve.isReady(), "is ready after adding split").to.be.true;
@@ -289,7 +289,7 @@ describe("EssenceProps", () => {
     describe("#changeVisualisation", () => {
       [TABLE_MANIFEST, LINE_CHART_MANIFEST, BAR_CHART_MANIFEST].forEach(manifest => {
         it("it sets visResolve to manual", () => {
-          const essence = EssenceFixtures.twitterNoVisualisation().changeVisualization(manifest);
+          const essence = EssenceFixtures.twitterNoVisualisation().changeVisualization(manifest, {});
           expect(essence.visualization.name).to.deep.equal(manifest.name);
           expect(essence.visResolve.isManual()).to.be.true;
         });

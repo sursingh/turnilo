@@ -28,6 +28,7 @@ import { count, sum } from "./measure";
 
 type EssenceKeys
   = "visualization"
+  | "visualizationSettings"
   | "timezone"
   | "filter"
   | "splits"
@@ -58,7 +59,8 @@ const defaults: EssenceOptions = {
   pinnedSort: "count",
   timeShift: TimeShift.empty(),
   timezone: Timezone.UTC,
-  visualization: TOTALS_MANIFEST
+  visualization: TOTALS_MANIFEST,
+  visualizationSettings: null
 };
 
 export function mockEssence(opts: Partial<EssenceOptions> = {}) {
