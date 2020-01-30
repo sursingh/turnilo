@@ -21,7 +21,6 @@ import { Essence } from "../../models/essence/essence";
 import { Filter } from "../../models/filter/filter";
 import { Splits } from "../../models/splits/splits";
 import { TimeShift } from "../../models/time-shift/time-shift";
-import { VisualizationManifest } from "../../models/visualization-manifest/visualization-manifest";
 import { manifestByName } from "../../visualization-manifests";
 import { filterDefinitionConverter } from "../version-4/filter-definition";
 import { highlightConverter } from "../version-4/highlight-definition";
@@ -38,6 +37,7 @@ export class ViewDefinitionConverter3 implements ViewDefinitionConverter<ViewDef
     const timezone = Timezone.fromJS(definition.timezone);
 
     const visualization = manifestByName(definition.visualization);
+    const visualizationSettings = visualization.visualizationSettings.defaults;
     const timeShift = definition.timeShift ? TimeShift.fromJS(definition.timeShift) : TimeShift.empty();
 
     const filter = Filter.fromClauses(definition.filters.map(fc => filterDefinitionConverter.toFilterClause(fc, dataCube)));
@@ -55,6 +55,7 @@ export class ViewDefinitionConverter3 implements ViewDefinitionConverter<ViewDef
     return new Essence({
       dataCube,
       visualization,
+      visualizationSettings,
       timezone,
       filter,
       timeShift,

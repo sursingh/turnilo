@@ -23,6 +23,7 @@ import { SplitDefinition } from "./split-definition";
 
 export interface ViewDefinition4 {
   visualization: string;
+  visualizationSettings?: object;
   timezone: string;
   filters: FilterClauseDefinition[];
   splits: SplitDefinition[];
