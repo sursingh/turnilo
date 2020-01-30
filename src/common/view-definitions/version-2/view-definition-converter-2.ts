@@ -16,7 +16,6 @@
 
 import { Duration, Timezone } from "chronoshift";
 import { List, OrderedSet, Set } from "immutable";
-import { NamedArray } from "immutable-class";
 import {
   AndExpression,
   ChainableExpression,
@@ -58,6 +57,7 @@ import { kindToType, Split } from "../../models/split/split";
 import { Splits } from "../../models/splits/splits";
 import { TimeShift } from "../../models/time-shift/time-shift";
 import { VisualizationManifest } from "../../models/visualization-manifest/visualization-manifest";
+import { manifestByName } from "../../visualization-manifests";
 import { ViewDefinitionConverter } from "../view-definition-converter";
 import { ViewDefinition2 } from "./view-definition-2";
 
@@ -66,8 +66,8 @@ export type FilterSelection = Expression | string;
 export class ViewDefinitionConverter2 implements ViewDefinitionConverter<ViewDefinition2, Essence> {
   version = 2;
 
-  fromViewDefinition(definition: ViewDefinition2, dataCube: DataCube, visualizations: VisualizationManifest[]): Essence {
-    const visualization = NamedArray.findByName(visualizations, definition.visualization);
+  fromViewDefinition(definition: ViewDefinition2, dataCube: DataCube): Essence {
+    const visualization = manifestByName(definition.visualization);
 
     const measureNames = definition.multiMeasureMode ? definition.selectedMeasures : [definition.singleMeasure];
     const series = SeriesList.fromMeasures(dataCube.measures.getMeasuresByNames(measureNames));
@@ -79,7 +79,7 @@ export class ViewDefinitionConverter2 implements ViewDefinitionConverter<ViewDef
     const colors = definition.colors && Colors.fromJS(definition.colors);
     const pinnedSort = definition.pinnedSort;
     const highlight = readHighlight(definition.highlight, dataCube);
-    return new Essence({ dataCube, visualizations, visualization, timezone, filter, timeShift, splits, pinnedDimensions, series, colors, pinnedSort, highlight });
+    return new Essence({ dataCube, visualization, timezone, filter, timeShift, splits, pinnedDimensions, series, colors, pinnedSort, highlight });
   }
 
   toViewDefinition(essence: Essence): ViewDefinition2 {

@@ -18,8 +18,6 @@
 import { Timezone } from "chronoshift";
 import { Dataset, TabulatorOptions } from "plywood";
 import * as React from "react";
-import * as ReactDOM from "react-dom";
-import { MANIFESTS } from "../../../common/visualization-manifests";
 import { Clicker } from "../../../common/models/clicker/clicker";
 import { Colors } from "../../../common/models/colors/colors";
 import { Customization } from "../../../common/models/customization/customization";
@@ -92,7 +90,7 @@ export interface CubeViewProps {
   hash: string;
   updateViewHash: (newHash: string, force?: boolean) => void;
   getCubeViewHash?: (essence: Essence, withPrefix?: boolean) => string;
-  getEssenceFromHash: (hash: string, dateCube: DataCube, visualizations: VisualizationManifest[]) => Essence;
+  getEssenceFromHash: (hash: string, dateCube: DataCube) => Essence;
   dataCube: DataCube;
   onNavClick?: Fn;
   customization?: Customization;
@@ -329,7 +327,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
   }
 
   getEssenceFromDataCube(dataCube: DataCube): Essence {
-    return Essence.fromDataCube(dataCube, MANIFESTS);
+    return Essence.fromDataCube(dataCube);
   }
 
   getEssenceFromHash(hash: string, dataCube: DataCube): Essence {
@@ -342,7 +340,7 @@ export class CubeView extends React.Component<CubeViewProps, CubeViewState> {
     }
 
     const { getEssenceFromHash } = this.props;
-    return getEssenceFromHash(hash, dataCube, MANIFESTS);
+    return getEssenceFromHash(hash, dataCube);
   }
 
   globalResizeListener = () => {
