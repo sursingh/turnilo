@@ -17,10 +17,8 @@
 
 import * as d3 from "d3";
 import { List, Set } from "immutable";
-import { immutableEqual } from "immutable-class";
 import { Dataset, Datum, PseudoDatum } from "plywood";
 import * as React from "react";
-import { TABLE_MANIFEST } from "../../../common/visualization-manifests/table/table";
 import { DateRange } from "../../../common/models/date-range/date-range";
 import { Essence, VisStrategy } from "../../../common/models/essence/essence";
 import { FixedTimeFilterClause, NumberFilterClause, StringFilterAction, StringFilterClause } from "../../../common/models/filter-clause/filter-clause";
@@ -33,6 +31,7 @@ import { Splits } from "../../../common/models/splits/splits";
 import { formatSegment } from "../../../common/utils/formatter/formatter";
 import { flatMap } from "../../../common/utils/functional/functional";
 import { integerDivision } from "../../../common/utils/general/general";
+import { TABLE_MANIFEST } from "../../../common/visualization-manifests/table/table";
 import { Delta } from "../../components/delta/delta";
 import { HighlightModal } from "../../components/highlight-modal/highlight-modal";
 import { Direction, ResizeHandle } from "../../components/resize-handle/resize-handle";
