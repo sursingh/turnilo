@@ -68,7 +68,7 @@ type DimensionId = string;
 export interface EssenceValue {
   dataCube: DataCube;
   visualization: VisualizationManifest;
-  visualizationSettings: VisualizationSettings;
+  visualizationSettings: VisualizationSettings | null;
   timezone: Timezone;
   filter: Filter;
   timeShift: TimeShift;
@@ -84,7 +84,7 @@ export interface EssenceValue {
 const defaultEssence: EssenceValue = {
   dataCube: null,
   visualization: null,
-  visualizationSettings: {},
+  visualizationSettings: null,
   timezone: Timezone.UTC,
   filter: null,
   splits: null,
@@ -158,7 +158,7 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
     const essence = new Essence({
       dataCube,
       visualization: null,
-      visualizationSettings: {},
+      visualizationSettings: null,
       timezone: dataCube.getDefaultTimezone(),
       filter: dataCube.getDefaultFilter(),
       timeShift: TimeShift.empty(),
@@ -534,10 +534,6 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
 
     const newSplits = this.setSortOnSplits(splits).updateWithFilter(filter, dataCube.dimensions);
 
-    function setSplits(essence: Essence): Essence {
-      return essence.set("splits", newSplits);
-    }
-
     function adjustStrategy(strategy: VisStrategy): VisStrategy {
       // If in manual mode stay there, keep the vis regardless of suggested strategy
       if (visResolve.isManual()) {
@@ -556,7 +552,12 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
       return essence.changeVisualization(newVis, newVis.visualizationSettings.defaults);
     }
 
-    return thread(this, adjustHighlight, setSplits, adjustVisualization);
+    return thread(
+      this,
+      adjustHighlight,
+      (essence: Essence) => essence.set("splits", newSplits),
+      adjustVisualization,
+      (essence: Essence) => essence.resolveVisualizationAndUpdate());
   }
 
   public changeSplit(splitCombine: Split, strategy: VisStrategy): Essence {
@@ -637,12 +638,11 @@ export class Essence extends ImmutableRecord<EssenceValue>(defaultEssence) {
     return this.set("colors", colors).resolveVisualizationAndUpdate();
   }
 
-  public changeVisualization(visualization: VisualizationManifest, settings: VisualizationSettings): Essence {
-    const changedVis = this
+  public changeVisualization(visualization: VisualizationManifest, settings: VisualizationSettings = visualization.visualizationSettings.defaults): Essence {
+    return this
       .set("visualization", visualization)
-      .set("visualizationSettings", settings);
-    if (visualization === this.visualization) return changedVis;
-    return changedVis.resolveVisualizationAndUpdate();
+      .set("visualizationSettings", settings)
+      .resolveVisualizationAndUpdate();
   }
 
   public resolveVisualizationAndUpdate() {
